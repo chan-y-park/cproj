@@ -13,7 +13,7 @@ n_of_v_0 = int(sys.argv[2])
 
 R = RootSystem(root_system)
 W = WeylGroup(R)
-L = R.weight_space()
+#L = R.weight_space()
 A = R.ambient_space()
 
 v_0 = A.fundamental_weight(n_of_v_0)
@@ -27,15 +27,17 @@ for w_i in W.simple_reflections():
 
 #print "{}\n".format(w_coxeter)
 
-root_system_type = root_system[0]
-root_system_rank = int(root_system[1:])
 # Get the dual coxeter number and the dimension of the 
 # orthonormal basis of the root system
-if root_system_type is 'A':
+root_system_type, root_system_rank = R.cartan_type()
+g = R.cartan_type().dual_coxeter_number()
+#if root_system_type is 'A':
+#root_system_type = root_system[0]
+#root_system_rank = int(root_system[1:])
+#    g = root_system_rank + 1
+#elif root_system_type is 'D':
+#    g = 2*root_system_rank -2
     
-    g = root_system_rank + 1
-elif root_system_type is 'D':
-    g = 2*root_system_rank -2
 m_1 = 1                     # the smallest exponent
 xi = exp(2*pi*I*m_1/g)      # coxeter plane eigenvector 
 
@@ -85,6 +87,7 @@ data = {
     "W_critical": W_critical,
     "roots": A.roots(),
     "simple_soliton_table": simple_soliton_table,
+    "coxeter_vector": tuple([complex(v_c_i) for v_c_i in v_c]),
 }
 
 print data

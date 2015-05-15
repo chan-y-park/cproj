@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body %}
+    <h2>Configuration</h2>
+    {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+    <form action="{{ url_for('get_config') }}" method=post>
+        <dl>
+            <dt>Root System:
+            <dd><input type=text name=root_system>
+            <dt>N of v_0:
+            <dd><input type=text name=n_of_v_0>
+            <dd><input type=submit value=Submit>
+        </dl>
+    </form>
+{% endblock %}
