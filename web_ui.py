@@ -1,6 +1,5 @@
 import flask
-import threading 
-import Queue
+import multiprocessing 
 import pdb
 import cproj
 
@@ -11,9 +10,9 @@ SECRET_KEY = 'coxeter projection key'
 app = flask.Flask(__name__)
 app.config.from_object(__name__)
 
-message_queue = Queue.Queue()
-result_queue = Queue.Queue()
-main_thread = None
+message_queue = multiprocessing.Queue()
+result_queue = multiprocessing.Queue()
+main_process = None
 progress = None 
 
 @app.route('/')
@@ -27,9 +26,9 @@ def get_config():
         flask.session['root_system'] = flask.request.form['root_system']
         flask.session['n_of_v_0'] = flask.request.form['n_of_v_0']
         flask.session['progress'] = ''
-        global main_thread, progress
+        global main_process, progress
         progress = ''
-        main_thread = threading.Thread(
+        main_process = multiprocessing.Process(
             target=cproj.main, 
             kwargs={
                 'root_system': flask.session['root_system'],
@@ -39,7 +38,7 @@ def get_config():
                 'result_queue': result_queue,
             }
         )
-        main_thread.start()
+        main_process.start()
         return flask.redirect(flask.url_for('show_progress'))
     return flask.render_template('config.html')
 
@@ -67,8 +66,8 @@ def show_progress():
 
 @app.route('/result')
 def show_result():
-    global main_thread, result_queue
-    main_thread.join()
+    global main_process, result_queue
+    main_process.join()
     return flask.render_template('result.html', contents=[result_queue.get()])
 
 if __name__ == '__main__':
