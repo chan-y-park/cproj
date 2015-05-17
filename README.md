@@ -2,6 +2,8 @@
 Produce a Coxeter projection diagram
 
 ## Requirements
-* flask
-* mpld3
-* mpldatacursor
+* Python libraries
+  * flask
+  * mpld3
+  * mpldatacursor
+* libapache2-mod-wsgi
