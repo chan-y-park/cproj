@@ -1,7 +1,8 @@
 import flask
-import cproj
-import multiprocessing
+import threading 
+import Queue
 import pdb
+import cproj
 
 # configuration
 DEBUG = True
@@ -10,9 +11,10 @@ SECRET_KEY = 'coxeter projection key'
 app = flask.Flask(__name__)
 app.config.from_object(__name__)
 
-logging_stream = cproj.set_logging('info')
-result = multiprocessing.Queue()
-main_process = None
+message_queue = Queue.Queue()
+result_queue = Queue.Queue()
+main_thread = None
+progress = None 
 
 @app.route('/')
 def show_welcome():
@@ -25,36 +27,49 @@ def get_config():
         flask.session['root_system'] = flask.request.form['root_system']
         flask.session['n_of_v_0'] = flask.request.form['n_of_v_0']
         flask.session['progress'] = ''
-        global main_process
-        main_process = multiprocessing.Process(
+        global main_thread, progress
+        progress = ''
+        main_thread = threading.Thread(
             target=cproj.main, 
             kwargs={
                 'root_system': flask.session['root_system'],
                 'n_of_v_0': flask.session['n_of_v_0'],
                 'use_mpld3': True,
-                'result_queue': result,
+                'message_queue': message_queue,
+                'result_queue': result_queue,
             }
         )
-        main_process.start()
-        #return flask.redirect(flask.url_for('show_progress'))
-        return flask.redirect(flask.url_for('show_result'))
+        main_thread.start()
+        return flask.redirect(flask.url_for('show_progress'))
     return flask.render_template('config.html')
 
-@app.route('/progress', methods=['POST'])
+
+def progress_stream_template(template_name, **context):
+    # http://flask.pocoo.org/docs/patterns/streaming/#streaming-from-templates
+    app.update_template_context(context)
+    t = app.jinja_env.get_template(template_name)
+    rv = t.stream(context)
+    return rv
+
+
+@app.route('/progress', methods=['GET', 'POST'])
 def show_progress():
-    if result.empty() is True:
-        flask.session['progress'] += flask.session['logging_stream'].getvalue()
-        return flask.Response(flask.session['progress'], mimetype="text/html") 
-    else:
-        flask.session['main_process'].join()
-        return flask.redirect(flask.url_for('show_result'),
-                              contents=[result.get()]) 
+    def yield_messages():
+        global message_queue, progress
+        message = message_queue.get()
+        while (message != 'SUCCESS'):
+            yield '<br>{}</br>\n'.format(message)
+            message = message_queue.get()
+        yield '<a href="result">Show result</a>\n' 
+    return flask.Response(
+        progress_stream_template('progress.html', progress=yield_messages())
+    )
 
 @app.route('/result')
 def show_result():
-    global main_process
-    main_process.join()
-    return flask.render_template('result.html', contents=[result.get()])
+    global main_thread, result_queue
+    main_thread.join()
+    return flask.render_template('result.html', contents=[result_queue.get()])
 
 if __name__ == '__main__':
     app.run()

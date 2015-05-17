@@ -13,35 +13,42 @@ import mpldatacursor
 
 import pdb
 
-def set_logging(level='info'):
-    if level == 'debug':
-        logging_level = logging.DEBUG
-        logging_format = '%(module)s@%(lineno)d: %(funcName)s: %(message)s'
-    elif level == 'info':
-        logging_level = logging.INFO
-        logging_format = '%(process)d: %(message)s'
-    else:
-        logging_level = logging.WARNING
-        logging_format = '%(message)s'
-
-    logging_stream = io.BytesIO()
-    #logging_stream = io.StringIO()
-    logging.basicConfig(level=logging_level, format=logging_format)
-    logger = logging.getLogger()
-    #for handler in logger.handlers:
-    #    logger.removeHandler(handler)
-    logger.addHandler(logging.StreamHandler(logging_stream))
-    return logging_stream
+#def set_logging(level='info'):
+#    cproj_logger = logging.getLogger('cproj')
+#    #logging_stream = io.StringIO()
+#    logging_stream = io.BytesIO()
+#    handler = logging.StreamHandler(logging_stream)
+#    if level == 'debug':
+#        logging_level = logging.DEBUG
+#        formatter = logging.Formatter(
+#            '%(module)s@%(lineno)d: %(funcName)s: %(message)s'
+#        )
+#    elif level == 'info':
+#        logging_level = logging.INFO
+#        formatter = logging.Formatter('%(process)d: %(message)s')
+#    else:
+#        logging_level = logging.WARNING
+#        formatter = logging.Formatter('%(message)s')
+#    #logging.basicConfig(format=logging_format)
+#    #for handler in cproj_logger.handlers:
+#    #    cproj_logger.removeHandler(handler)
+#    cproj_logger.setLevel(logging_level)
+#    handler.setLevel(logging_level)
+#    handler.setFormatter(formatter)
+#    cproj_logger.addHandler(handler)
+#    return logging_stream
 
 
 def main(root_system='A3', n_of_v_0='1', weight_index=None, use_mpld3=False,
-         result_queue=None):
+         message_queue=None, result_queue=None):
 
-    logging.info("Starting a SAGE script...")
+    message_queue.put("Starting a SAGE script...")
+    print("Starting a SAGE script...")
     data_str = subprocess.check_output(
         ["sage", "cproj.sage", str(root_system), str(n_of_v_0)] 
     )
-    logging.info("Finished running the SAGE script.")
+    message_queue.put("Finished running the SAGE script.")
+    print("Finished running the SAGE script.")
 
     # Unpack data from the sage script.
     data = eval(data_str)
@@ -173,6 +180,7 @@ def main(root_system='A3', n_of_v_0='1', weight_index=None, use_mpld3=False,
         if result_queue is None:
             return mpld3.fig_to_html(pyplot.gcf())
         else:
+            message_queue.put("SUCCESS")
             result_queue.put(mpld3.fig_to_html(pyplot.gcf()))
         #with open("./result.html", 'w') as f:
         #    mpld3.save_html(pyplot.gcf(), f)
@@ -201,14 +209,17 @@ if __name__ == '__main__':
     weight_index = None
     use_mpld3 = False 
 
+    logging_stream = set_logging('info')
+
     for opt, arg in optlist:
         if(opt == '-i'):
             weight_index = int(arg)
         elif(opt == "--use-mpld3"):
             use_mpld3 = True
-            logging.info("Results will be displayed in HTML.")
+            cproj_logger.info("Results will be displayed in HTML.")
 
-    result = main(root_system, n_of_v_0, weight_index, use_mpld3)
+    result = main(root_system, n_of_v_0, weight_index, use_mpld3,
+                  logging_stream)
 #    if use_mpld3 is True:
 #        with open("./result.html", 'w') as f:
 #            f.write("<!doctype html>\n")

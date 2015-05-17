@@ -1,6 +1,16 @@
-{% extends "layout.html" %}
+<!doctype html>
+<style>
+    #data {
+        text-align: center;
+    }
+</style>
+<!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->
 {% block body %}
-    <div class=entries>
-        {{ progress|safe }}
-    </div>
+    <div id="data">Showing progress...</div>
+{% for message in progress: %}
+    <!--<script>
+        $("#data").text("{{ message|safe }}")
+    </script>-->
+    {{ message|safe}}
+{% endfor %}
 {% endblock %}
