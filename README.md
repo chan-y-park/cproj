@@ -15,3 +15,4 @@ Produce a Coxeter projection diagram
     * edit ```/etc/apache2/sites-available/*.conf```
     * ```a2ensite/a2dissite <site_config_filename>```
     * ```sudo service apache2 restart```
+    * ```mkdir /var/www/.sage```
