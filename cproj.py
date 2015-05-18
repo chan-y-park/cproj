@@ -62,35 +62,6 @@ def main(root_system='A3', n_of_v_0='1', weight_index=None, use_mpld3=False,
 
     title = root_system + "_" + str(n_of_v_0)
 
-    # Save the soliton table as a text file.
-    with open("./results/" + title + ".txt", 'w') as f:
-        # List of weights 
-        for i, v_i in enumerate(weyl_orbit):
-            f.write("v_{} = {}\n".format(i, v_i))
-        f.write('\n')
-        # Coxeter vector 
-        f.write("v_c = {}\n".format(v_c))
-        f.write('\n')
-        # List of the values of W at critical points
-        for i, W_i in enumerate(W_critical):
-            f.write("W(v_{}) = {}\n".format(i, W_i))
-        f.write('\n')
-        # List of roots
-        for k, alpha_k in enumerate(roots):
-            f.write("alpha_{} = {}\n".format(k, alpha_k))
-        f.write('\n')
-        # Soliton table
-        width = 10
-        f.write("".ljust(width, ' '))
-        for i in range(len_orbit):
-            f.write("v_{}".format(i).rjust(width, ' '))
-        f.write('\n')
-        for i in range(len_orbit):
-            f.write("v_{}".format(i).ljust(width, ' '))
-            for j in range(len_orbit):
-                f.write(str(simple_soliton_table[i][j]).rjust(width, ' '))
-            f.write('\n')
-
     # Plot a figure of the projection of the soliton polytope.
     matplotlib.rcParams["savefig.directory"] = "./"
     figure = pyplot.figure(title, facecolor='w')
@@ -185,6 +156,35 @@ def main(root_system='A3', n_of_v_0='1', weight_index=None, use_mpld3=False,
         #with open("./result.html", 'w') as f:
         #    mpld3.save_html(pyplot.gcf(), f)
     else:
+        # Save the soliton table as a text file.
+        with open("./results/" + title + ".txt", 'w') as f:
+            # List of weights 
+            for i, v_i in enumerate(weyl_orbit):
+                f.write("v_{} = {}\n".format(i, v_i))
+            f.write('\n')
+            # Coxeter vector 
+            f.write("v_c = {}\n".format(v_c))
+            f.write('\n')
+            # List of the values of W at critical points
+            for i, W_i in enumerate(W_critical):
+                f.write("W(v_{}) = {}\n".format(i, W_i))
+            f.write('\n')
+            # List of roots
+            for k, alpha_k in enumerate(roots):
+                f.write("alpha_{} = {}\n".format(k, alpha_k))
+            f.write('\n')
+            # Soliton table
+            width = 10
+            f.write("".ljust(width, ' '))
+            for i in range(len_orbit):
+                f.write("v_{}".format(i).rjust(width, ' '))
+            f.write('\n')
+            for i in range(len_orbit):
+                f.write("v_{}".format(i).ljust(width, ' '))
+                for j in range(len_orbit):
+                    f.write(str(simple_soliton_table[i][j]).rjust(width, ' '))
+                f.write('\n')
+
         mpldatacursor.datacursor(
             formatter="{label}".format,
             display="multiple",
