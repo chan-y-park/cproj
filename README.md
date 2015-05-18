@@ -6,6 +6,7 @@ Produce a Coxeter projection diagram
   * flask
   * mpld3
   * mpldatacursor
+* SAGE
 * Apache setup
   * http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/
   * ```libapache2-mod-wsgi```
