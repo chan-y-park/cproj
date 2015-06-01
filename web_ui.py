@@ -29,11 +29,10 @@ def get_config():
         global main_process, progress
         progress = ''
         main_process = multiprocessing.Process(
-            target=cproj.main, 
+            target=cproj.plot, 
             kwargs={
                 'root_system': flask.session['root_system'],
                 'n_of_v_0': flask.session['n_of_v_0'],
-                'use_mpld3': True,
                 'message_queue': message_queue,
                 'result_queue': result_queue,
             }
