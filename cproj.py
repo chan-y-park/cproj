@@ -23,4 +23,5 @@ if __name__ == '__main__':
             weight_index = int(arg)
 
     cp = CoxeterProjection(root_system, n_of_v_0)
+    cp.get_sage_data()
     cp.plot(weight_index)
