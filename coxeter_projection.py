@@ -69,8 +69,9 @@ class CoxeterProjection:
         #)
         pyplot.axes().set_aspect('equal')
 
+        mpldatacursor_artists = []
         # Plot critical points.
-        W_point_labels = ["v_{} = {}".format(i, v_i) 
+        W_point_labels = ["$v_{{{}}} = {}$".format(i, v_i) 
                           for i, v_i in enumerate(weyl_orbit)]
         W_points = []
         for i in range(len_orbit):
@@ -79,11 +80,11 @@ class CoxeterProjection:
                 W_i.real, 
                 W_i.imag,
                 'o',
-                markersize=5,
+                markersize=10,
                 color='k',
                 label=W_point_labels[i],
-            )
-            W_points.append(mplobjs[0])
+            )[0]
+            mpldatacursor_artists.append(mplobjs)
 
 
         # Plot solitons connecting critical points.
@@ -114,14 +115,30 @@ class CoxeterProjection:
                 else:
                     soliton, sign = soliton_data
                 W_j = W_critical[j]
-                label = "alpha_{} = {}".format(soliton, roots[soliton])
+                if sign == -1:
+                    sign_str = '-'
+                else:
+                    sign_str = ''
+                root = tuple([sign*r_k for r_k in roots[soliton]])
+                label = "${}\\alpha_{{{}}} = {}$".format(
+                    sign_str, soliton, root
+                )
                 # Draw an arrow from v_i to v_j
+                offset = .05
                 x = W_i.real
-                y = W_i.imag 
+                y = W_i.imag
                 dx = W_j.real - x
                 dy = W_j.imag - y
                 mplobjs = pyplot.arrow(
-                    x, y, dx, dy, width=.001,
+                    x + (offset * dx), 
+                    y + (offset * dy), 
+                    (1 - 2*offset)*dx, 
+                    (1 - 2*offset)*dy, 
+                    length_includes_head=True,
+                    #shape='left',
+                    width=.002,
+                    head_width=.03,
+                    head_length=.045,
                     label=label, color=soliton_colors[soliton],
                 )
                 # Draw a line from v_i to v_j
@@ -129,8 +146,10 @@ class CoxeterProjection:
                 #    [W_i.real, W_j.real], [W_i.imag, W_j.imag], '-',
                 #    label=label, color=soliton_colors[soliton],
                 #)[0]
+                mpldatacursor_artists.append(mplobjs)
 
         mpldatacursor.datacursor(
+            artists=mpldatacursor_artists,
             formatter="{label}".format,
             display="multiple",
             draggable=True,
