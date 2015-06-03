@@ -2,6 +2,7 @@ import flask
 import multiprocessing 
 import pdb
 import cproj
+from coxeter_projection import CoxeterProjection, web_process
 
 # configuration
 DEBUG = True
@@ -11,9 +12,10 @@ app = flask.Flask(__name__)
 app.config.from_object(__name__)
 
 message_queue = multiprocessing.Queue()
-result_queue = multiprocessing.Queue()
-main_process = None
-progress = None 
+input_queue = multiprocessing.Queue()
+output_queue = multiprocessing.Queue()
+
+cp_process = None
 
 @app.route('/')
 def show_welcome():
@@ -25,19 +27,18 @@ def get_config():
     if flask.request.method == 'POST':
         flask.session['root_system'] = flask.request.form['root_system']
         flask.session['n_of_v_0'] = flask.request.form['n_of_v_0']
-        flask.session['progress'] = ''
-        global main_process, progress
-        progress = ''
-        main_process = multiprocessing.Process(
-            target=cproj.plot, 
+        global cp_process, message_queue, input_queue, output_queue
+        cp_process = multiprocessing.Process(
+            target=web_process, 
             kwargs={
                 'root_system': flask.session['root_system'],
                 'n_of_v_0': flask.session['n_of_v_0'],
                 'message_queue': message_queue,
-                'result_queue': result_queue,
+                'input_queue': input_queue,
+                'output_queue': output_queue,
             }
         )
-        main_process.start()
+        cp_process.start()
         return flask.redirect(flask.url_for('show_progress'))
     return flask.render_template('config.html')
 
@@ -53,7 +54,7 @@ def progress_stream_template(template_name, **context):
 @app.route('/progress', methods=['GET', 'POST'])
 def show_progress():
     def yield_messages():
-        global message_queue, progress
+        global message_queue
         message = message_queue.get()
         while (message != 'SUCCESS'):
             yield '<br>{}</br>\n'.format(message)
@@ -65,9 +66,19 @@ def show_progress():
 
 @app.route('/result')
 def show_result():
-    global main_process, result_queue
-    main_process.join()
-    return flask.render_template('result.html', contents=[result_queue.get()])
+    global cp_process
+    cp_process.join()
+    return flask.render_template(
+        'result.html', 
+    )
+
+
+@app.route('/plot')
+def coxeter_projection_plot():
+    global output_queue 
+    cp = output_queue.get()
+    img = cp.plot()
+    return flask.send_file(img, mimetype='image/png')
 
 if __name__ == '__main__':
     app.run()

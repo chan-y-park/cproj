@@ -11,13 +11,12 @@ import pdb
 class CoxeterProjection:
     def __init__(
         self, root_system=None, n_of_v_0=None, is_interactive=True,
-        message_queue=None, result_queue=None,
+        #message_queue=None,
     ):
         self.root_system = root_system
         self.n_of_v_0 = n_of_v_0
         self.is_interactive = is_interactive
-        self.message_queue = message_queue
-        self.result_queue = result_queue
+        #self.message_queue = message_queue
         self.weyl_orbit = None
         self.W_critical = None
         self.roots = None
@@ -26,11 +25,9 @@ class CoxeterProjection:
 
 
     def get_sage_data(self):
-        self.message("Starting a SAGE script...")
         data_str = subprocess.check_output(
             ["sage", "cproj.sage", str(self.root_system), str(self.n_of_v_0)] 
         )
-        self.message("Finished running the SAGE script.")
 
         # Unpack data from the sage script.
         data = eval(data_str)
@@ -41,18 +38,21 @@ class CoxeterProjection:
         self.v_c = data["coxeter_vector"]
 
 
-    def message(self, msg):
-        if self.is_interactive is True:
-            print msg
-        else:
-            self.message_queue.put(msg)
+
+#    def message(self, msg):
+#        if self.is_interactive is True:
+#            if msg == 'SUCCESS':
+#                pass
+#            else:
+#                print msg
+#        else:
+#            self.message_queue.put(msg)
 
 
     def plot(self, weight_index=None):
         #XXX: Is there a way to put these imports in the beginning of a 
         #     module?
         import matplotlib
-        #matplotlib.rcParams["savefig.directory"] = "./"
         if self.is_interactive is True:
             matplotlib.use('TkAgg')
         else:
@@ -60,10 +60,15 @@ class CoxeterProjection:
         import mpldatacursor
         import matplotlib.pyplot as pyplot
 
+        matplotlib.rcParams["savefig.directory"] = "./"
+
         title = self.root_system + "_" + str(self.n_of_v_0)
 
         # Plot a figure of the projection of the soliton polytope.
-        figure = pyplot.figure(title, facecolor='w', figsize=(6, 6), dpi=200,)
+        figure = pyplot.figure(
+            title, facecolor='w', figsize=(8, 8), 
+            #dpi=100,
+        )
         pyplot.axis('off')
         #pyplot.tick_params(
         #    axis="both",
@@ -182,9 +187,9 @@ class CoxeterProjection:
         )
 
         # Adjust margins.
-        margin = .1     # in percent
-        pyplot.xlim(*[(1 + margin)*l for l in pyplot.xlim()])
-        pyplot.ylim(*[(1 + margin)*l for l in pyplot.ylim()])
+        margin = .1
+        pyplot.xlim(*[(1 + margin/2)*l for l in pyplot.xlim()])
+        pyplot.ylim(*[(1 + margin/2)*l for l in pyplot.ylim()])
 
 
         if self.is_interactive is True:
@@ -227,3 +232,19 @@ class CoxeterProjection:
                     f.write(str(self.simple_soliton_table[i][j])
                             .rjust(width, ' '))
                 f.write('\n')
+
+
+def web_process(
+    root_system=None,
+    n_of_v_0=None,
+    message_queue=None,
+    input_queue=None,
+    output_queue=None
+):
+    cp = CoxeterProjection(root_system=root_system, n_of_v_0=n_of_v_0,
+                           is_interactive=False)
+    message_queue.put("Starting a SAGE script...")
+    cp.get_sage_data()
+    message_queue.put("Finished running the SAGE script.")
+    output_queue.put(cp)
+    message_queue.put('SUCCESS')

@@ -1,8 +1,4 @@
 {% extends "layout.html" %}
 {% block body %}
-    {% for content in contents %}
-    <div class=entries>
-        {{ content|safe }}
-    </div>
-    {% endfor %}
+    <img src="{{ url_for('coxeter_projection_plot') }}">
 {% endblock %}
