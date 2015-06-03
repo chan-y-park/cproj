@@ -32,14 +32,8 @@ def get_config():
     )
     if flask.request.method == 'GET' and bool(flask.request.args):
         set_config_items(config_items, flask.request.args)
-        #config_items['root_system'] = flask.request.args['root_system']
-        #config_items['n_of_v_0'] = flask.request.args['n_of_v_0']
-        #config_items['weight_index'] = flask.request.args['weight_index']
     elif flask.request.method == 'POST':
         set_config_items(config_items, flask.request.form)
-        #config_items['root_system'] = flask.request.form['root_system']
-        #config_items['n_of_v_0'] = flask.request.form['n_of_v_0']
-        #config_items['weight_index'] = flask.request.form['weight_index']
     if config_items['root_system'] is not None:
         global cp_process, message_queue, input_queue, output_queue
         cp_process = multiprocessing.Process(
