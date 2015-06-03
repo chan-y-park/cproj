@@ -1,5 +1,6 @@
 import flask
 import multiprocessing 
+import time
 import pdb
 import cproj
 from coxeter_projection import CoxeterProjection, web_process
@@ -24,15 +25,29 @@ def show_welcome():
 
 @app.route('/config', methods=['GET', 'POST'])
 def get_config():
-    if flask.request.method == 'POST':
-        flask.session['root_system'] = flask.request.form['root_system']
-        flask.session['n_of_v_0'] = flask.request.form['n_of_v_0']
+    config_items = dict(
+        root_system=None,
+        n_of_v_0=None,
+        weight_index=None,
+    )
+    if flask.request.method == 'GET' and bool(flask.request.args):
+        set_config_items(config_items, flask.request.args)
+        #config_items['root_system'] = flask.request.args['root_system']
+        #config_items['n_of_v_0'] = flask.request.args['n_of_v_0']
+        #config_items['weight_index'] = flask.request.args['weight_index']
+    elif flask.request.method == 'POST':
+        set_config_items(config_items, flask.request.form)
+        #config_items['root_system'] = flask.request.form['root_system']
+        #config_items['n_of_v_0'] = flask.request.form['n_of_v_0']
+        #config_items['weight_index'] = flask.request.form['weight_index']
+    if config_items['root_system'] is not None:
         global cp_process, message_queue, input_queue, output_queue
         cp_process = multiprocessing.Process(
             target=web_process, 
             kwargs={
-                'root_system': flask.session['root_system'],
-                'n_of_v_0': flask.session['n_of_v_0'],
+                'root_system': config_items['root_system'],
+                'n_of_v_0': config_items['n_of_v_0'],
+                'weight_index': config_items['weight_index'],
                 'message_queue': message_queue,
                 'input_queue': input_queue,
                 'output_queue': output_queue,
@@ -78,7 +93,20 @@ def coxeter_projection_plot():
     global output_queue 
     cp = output_queue.get()
     img = cp.plot()
-    return flask.send_file(img, mimetype='image/png')
+    rv = flask.send_file(img, mimetype='image/png', cache_timeout=0)
+    rv.set_etag(str(time.time()))
+    return rv
+
+
+def set_config_items(config_items, request_dict):
+    for key, value in request_dict.items():
+        if key == 'weight_index' or key == 'n_of_v_0':
+            try:
+                config_items[key] = int(value)
+            except ValueError:
+                config_items[key] = None
+        else:
+            config_items[key] = value
 
 if __name__ == '__main__':
     app.run()

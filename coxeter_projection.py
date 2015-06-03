@@ -2,8 +2,8 @@
 
 import subprocess
 import random
-from cStringIO import StringIO
-
+#from cStringIO import StringIO
+from io import BytesIO
 
 import pdb
 
@@ -11,12 +11,12 @@ import pdb
 class CoxeterProjection:
     def __init__(
         self, root_system=None, n_of_v_0=None, is_interactive=True,
-        #message_queue=None,
+        weight_index=None,
     ):
         self.root_system = root_system
         self.n_of_v_0 = n_of_v_0
         self.is_interactive = is_interactive
-        #self.message_queue = message_queue
+        self.weight_index = weight_index
         self.weyl_orbit = None
         self.W_critical = None
         self.roots = None
@@ -49,7 +49,7 @@ class CoxeterProjection:
 #            self.message_queue.put(msg)
 
 
-    def plot(self, weight_index=None):
+    def plot(self):
         #XXX: Is there a way to put these imports in the beginning of a 
         #     module?
         import matplotlib
@@ -120,10 +120,10 @@ class CoxeterProjection:
         #soliton_colors = [colors[i%6] for i in range(len(roots))]
 
 
-        if weight_index is None:
+        if self.weight_index is None:
             i_list = range(len(self.weyl_orbit))
         else:
-            i_list = [weight_index]
+            i_list = [self.weight_index]
 
         for i in i_list:
             W_i = self.W_critical[i]
@@ -197,7 +197,8 @@ class CoxeterProjection:
             pyplot.show()
         else:
             # Return PNG to web frontend.
-            img = StringIO()
+            #img = StringIO()
+            img = BytesIO()
             pyplot.savefig(img)
             img.seek(0)
             return img
@@ -237,12 +238,17 @@ class CoxeterProjection:
 def web_process(
     root_system=None,
     n_of_v_0=None,
+    weight_index=None,
     message_queue=None,
     input_queue=None,
     output_queue=None
 ):
-    cp = CoxeterProjection(root_system=root_system, n_of_v_0=n_of_v_0,
-                           is_interactive=False)
+    cp = CoxeterProjection(
+        root_system=root_system, 
+        n_of_v_0=n_of_v_0,
+        weight_index=weight_index,                   
+        is_interactive=False,
+    )
     message_queue.put("Starting a SAGE script...")
     cp.get_sage_data()
     message_queue.put("Finished running the SAGE script.")
