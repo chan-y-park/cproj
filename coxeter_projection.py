@@ -187,9 +187,9 @@ class CoxeterProjection:
         )
 
         # Adjust margins.
-        margin = .1
-        pyplot.xlim(*[(1 + margin/2)*l for l in pyplot.xlim()])
-        pyplot.ylim(*[(1 + margin/2)*l for l in pyplot.ylim()])
+        #margin = .1
+        #pyplot.xlim(*[(1 + margin/2)*l for l in pyplot.xlim()])
+        #pyplot.ylim(*[(1 + margin/2)*l for l in pyplot.ylim()])
 
 
         if self.is_interactive is True:

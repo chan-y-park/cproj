@@ -12,12 +12,6 @@ SECRET_KEY = 'coxeter projection key'
 app = flask.Flask(__name__)
 app.config.from_object(__name__)
 
-message_queue = multiprocessing.Queue()
-input_queue = multiprocessing.Queue()
-output_queue = multiprocessing.Queue()
-
-cp_process = None
-
 @app.route('/')
 def show_welcome():
     #return flask.render_template('index.html')
@@ -25,64 +19,20 @@ def show_welcome():
 
 @app.route('/config', methods=['GET', 'POST'])
 def get_config():
-    config_items = dict(
-        root_system=None,
-        n_of_v_0=None,
-        weight_index=None,
-    )
+    flask.session['root_system'] = None
+    flask.session['n_of_v_0'] = None
+    flask.session['weight_index'] = None
     if flask.request.method == 'GET' and bool(flask.request.args):
-        set_config_items(config_items, flask.request.args)
-        #config_items['root_system'] = flask.request.args['root_system']
-        #config_items['n_of_v_0'] = flask.request.args['n_of_v_0']
-        #config_items['weight_index'] = flask.request.args['weight_index']
+        set_config_items(flask.session, flask.request.args)
     elif flask.request.method == 'POST':
-        set_config_items(config_items, flask.request.form)
-        #config_items['root_system'] = flask.request.form['root_system']
-        #config_items['n_of_v_0'] = flask.request.form['n_of_v_0']
-        #config_items['weight_index'] = flask.request.form['weight_index']
-    if config_items['root_system'] is not None:
-        global cp_process, message_queue, input_queue, output_queue
-        cp_process = multiprocessing.Process(
-            target=web_process, 
-            kwargs={
-                'root_system': config_items['root_system'],
-                'n_of_v_0': config_items['n_of_v_0'],
-                'weight_index': config_items['weight_index'],
-                'message_queue': message_queue,
-                'input_queue': input_queue,
-                'output_queue': output_queue,
-            }
-        )
-        cp_process.start()
-        return flask.redirect(flask.url_for('show_progress'))
+        set_config_items(flask.session, flask.request.form)
+    if flask.session['root_system'] is not None:
+        return flask.redirect(flask.url_for('show_result'))
     return flask.render_template('config.html')
 
 
-def progress_stream_template(template_name, **context):
-    # http://flask.pocoo.org/docs/patterns/streaming/#streaming-from-templates
-    app.update_template_context(context)
-    t = app.jinja_env.get_template(template_name)
-    rv = t.stream(context)
-    return rv
-
-
-@app.route('/progress', methods=['GET', 'POST'])
-def show_progress():
-    def yield_messages():
-        global message_queue
-        message = message_queue.get()
-        while (message != 'SUCCESS'):
-            yield '<br>{}</br>\n'.format(message)
-            message = message_queue.get()
-        yield '<a href="result">Show result</a>\n' 
-    return flask.Response(
-        progress_stream_template('progress.html', progress=yield_messages())
-    )
-
 @app.route('/result')
 def show_result():
-    global cp_process
-    cp_process.join()
     return flask.render_template(
         'result.html', 
     )
@@ -90,8 +40,13 @@ def show_result():
 
 @app.route('/plot')
 def coxeter_projection_plot():
-    global output_queue 
-    cp = output_queue.get()
+    cp = CoxeterProjection(
+        root_system=flask.session['root_system'], 
+        n_of_v_0=flask.session['n_of_v_0'],
+        weight_index=flask.session['weight_index'],                   
+        is_interactive=False,
+    )
+    cp.get_sage_data()
     img = cp.plot()
     rv = flask.send_file(img, mimetype='image/png', cache_timeout=0)
     rv.set_etag(str(time.time()))
