@@ -1,7 +1,62 @@
 {% extends "layout.html" %}
 {% block body %}
+    <div class="container">
     <h2>Result</h2>
-    <a href="{{ url_for('get_config') }}">Back to configuration</a>
+    <a href="{{ url_for('get_config') }}" 
+     class="btn btn-default">Back to configuration</a>
+
     <br/>
-    <img src="{{ url_for('coxeter_projection_plot') }}">
+
+    <h3>Coxeter projection plot</h3>
+    <img src="{{ url_for('coxeter_projection_plot', root_system = root_system,
+                 n_of_v_0 = n_of_v_0, weight_index = weight_index) }}">
+
+    <br/>
+
+    <h3>Data</h3>
+
+    <h4>Coxeter vector</h4>
+    <ul>
+        <li> \(v_c = {{v_c_str}}\)
+    </ul>
+
+    <h4>Weights of ground states</h4>
+    <ul>
+    {% for v_i in weyl_orbit %}
+        <li> \(v_{ {{ loop.index }} } = {{ v_i }}\)
+    {% endfor %}
+    </ul>
+
+    <h4>Critical values of \(W\)</h4>
+    <ul>
+    {% for W_i in W_c_str %}
+        <li> \(W(v_{ {{ loop.index }} }) = {{ W_i }}\)
+    {% endfor %}
+    </ul>
+
+    <h4>Roots</h4>
+    <ul>
+    {% for alpha_i in roots %}
+        <li> \(\alpha_{ {{ loop.index }} } = {{ alpha_i }}\)
+    {% endfor %}
+    </ul>
+
+    <h4>Solitons</h4>
+    <table class="table table-bordered table-condensed" style="width: auto;">
+        <tr>
+            <td/>
+        {% for i in range(len_orbit) %}
+            <td class="text-center"> \( v_{ {{ i+1 }} } \)</td> 
+        {% endfor %}
+        </tr>
+        {% for i in range(len_orbit) %}
+        <tr>
+            <td class="text-center"> \( v_{ {{ i+1 }} } \)</td> 
+            {% for j in range(len_orbit) %}
+            <td class="text-center"> \( {{ solitons_str[i][j] }} \) </td> 
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
 {% endblock %}
