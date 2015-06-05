@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
+    {% for message in get_flashed_messages() %}
+    <div class=flash><p>Error: {{ message }}</p></div>
+    {% endfor %}
     <div class="container">
     <h2>Result</h2>
     <a href="{{ url_for('get_config') }}" 
@@ -8,7 +11,8 @@
     <br/>
 
     <h3>Coxeter projection plot</h3>
-    <img src="{{ url_for('coxeter_projection_plot', root_system = root_system,
+    <img src="{{ url_for('coxeter_projection_plot', 
+                 root_system = root_system,
                  n_of_v_0 = n_of_v_0, weight_index = weight_index) }}">
 
     <br/>
@@ -20,7 +24,8 @@
         <li> \(v_c = {{v_c_str}}\)
     </ul>
 
-    <h4>Weights of ground states</h4>
+    <h4>Weights of ground states 
+        (in the orthonomal basis of the weight space)</h4>
     <ul>
     {% for v_i in weyl_orbit %}
         <li> \(v_{ {{ loop.index }} } = {{ v_i }}\)
@@ -34,7 +39,7 @@
     {% endfor %}
     </ul>
 
-    <h4>Roots</h4>
+    <h4>Roots (in the orthonomal basis of the weight space)</h4>
     <ul>
     {% for alpha_i in roots %}
         <li> \(\alpha_{ {{ loop.index }} } = {{ alpha_i }}\)

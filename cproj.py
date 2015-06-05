@@ -6,10 +6,9 @@ import random
 from math import ceil, log10
 from io import BytesIO
 import pdb
-from coxeter_projection import CoxeterProjection
 
 DATA_DIR = './data/'
-
+PLOT_DIR = './static/'
 
 def set_sage_data(root_system=None, n_of_v_0_str=None,):
     data_file_path = DATA_DIR + root_system + '_' + n_of_v_0_str
@@ -42,6 +41,8 @@ def plot_coxeter_projection(
         matplotlib.use('Agg')
     import mpldatacursor
     import matplotlib.pyplot as pyplot
+
+    pyplot.clf()
 
     matplotlib.rcParams["savefig.directory"] = "./"
 
@@ -181,12 +182,22 @@ def plot_coxeter_projection(
         pyplot.show()
     else:
         # Return PNG to web frontend.
-        #img = StringIO()
         img = BytesIO()
         pyplot.savefig(img)
         img.seek(0)
         return img
 
+#        if not os.path.exists(PLOT_DIR):
+#            os.makedirs(PLOT_DIR)
+#
+#        plot_file_name = root_system + '_' + str(n_of_v_0)
+#        if weight_index is not None:
+#            plot_file_name += '_' + str(weight_index)
+#        plot_file_name += '.png'
+#        plot_file_path = PLOT_DIR + plot_file_name
+#        if not os.path.isfile(plot_file_path):
+#            pyplot.savefig(plot_file_path)
+#        return plot_file_path
 
 def group_degenerate_W_c(W_c):
     # grouped_W_c = [[W_i, [i_1, i_2, ...]], [W_j, [j_1, j_2, ...]], ...]

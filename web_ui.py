@@ -1,12 +1,14 @@
 import flask
 import multiprocessing 
 import time
+from io import BytesIO
 import pdb
 import cproj
 
 # configuration
 DEBUG = True
 SECRET_KEY = 'coxeter projection key'
+#CACHE_TYPE = 'null'
 
 app = flask.Flask(__name__)
 app.config.from_object(__name__)
@@ -17,7 +19,6 @@ def show_welcome():
 
 @app.route('/config', methods=['GET', 'POST'])
 def get_config():
-    is_submitted = False
     config_items = {}
     if flask.request.method == 'GET' and bool(flask.request.args):
         set_config_items(config_items, flask.request.args)
@@ -25,8 +26,34 @@ def get_config():
         set_config_items(config_items, flask.request.form)
 
     if bool(config_items):
-        if config_items['type'] == 'E':
+        # Form validity checks
+        try:
             rank = int(config_items['rank'])
+        except ValueError:
+            flask.flash('The rank should be a positive integer.')
+            return flask.redirect(flask.url_for('get_config'))
+        if rank < 0:
+            flask.flash('The rank should be a positive integer.')
+            return flask.redirect(flask.url_for('get_config'))
+
+        try:
+            n_of_v_0 = int(config_items['n_of_v_0'])
+        except ValueError:
+            flask.flash('Invalid fundamental weight index.')
+            return flask.redirect(flask.url_for('get_config'))
+        if n_of_v_0 < 1 or n_of_v_0 > rank:
+            flask.flash('The fundamental weight index should be an integer'
+                        ' between 1 and the rank.')
+            return flask.redirect(flask.url_for('get_config'))
+
+        if config_items['weight_index'] != '':
+            try:
+                weight_index = int(config_items['weight_index'])
+            except ValueError:
+                flask.flash('Invalid ground state index.')
+                return flask.redirect(flask.url_for('get_config'))
+
+        if config_items['type'] == 'E':
             if (rank != 6 and rank != 7 and rank != 8):
                 flask.flash('The rank of an E-type should be 6, 7, or 8.')
                 return flask.redirect(flask.url_for('get_config'))
@@ -36,6 +63,7 @@ def get_config():
                     'weight for {}.'.format(config_items['root_system'])
                 )
                 return flask.redirect(flask.url_for('get_config'))
+
         cproj.set_sage_data(
             root_system=config_items['root_system'],
             n_of_v_0_str=config_items['n_of_v_0']
@@ -43,6 +71,7 @@ def get_config():
         return flask.redirect(
             flask.url_for(
                 'show_result',
+                #key=time.time(),
                 root_system=config_items['root_system'],
                 n_of_v_0=config_items['n_of_v_0'],
                 weight_index=config_items['weight_index'],
@@ -52,6 +81,8 @@ def get_config():
     return flask.render_template('config.html')
 
 
+#@app.route('/result/<key>')
+#def show_result(key):
 @app.route('/result')
 def show_result():
     root_system = flask.request.args.get('root_system')
@@ -99,6 +130,7 @@ def show_result():
 
     return flask.render_template(
         'result.html', 
+        #key=key,
         root_system=root_system,
         n_of_v_0=n_of_v_0,
         weight_index=weight_index,
@@ -111,6 +143,8 @@ def show_result():
     )
 
 
+#@app.route('/plot/<key>')
+#def coxeter_projection_plot(key):
 @app.route('/plot')
 def coxeter_projection_plot():
     root_system = flask.request.args.get('root_system')

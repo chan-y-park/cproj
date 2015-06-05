@@ -1,5 +1,22 @@
 {% extends "layout.html" %}
 {% block body %}
+    <div style="width:800px; margin:20px 20px 20px 20px">
+    <p> 
+        This web page dynamically generates the Coxeter projection of 
+        the weights of a representation of a simply-laced Lie algebra, 
+        which is a projection of the representaion from its higher dimensional 
+        weight space to a complex plane.
+    </p>
+    <p>
+        A Coxeter projection encodes the BPS spectrum of a 2d 
+        \(\mathcal{N} = (2,2)\) Landau-Ginzburg model. For more detail, see
+        <ul>
+            <li> <a href=https://inspirehep.net/record/29267?ln=en>Polytopes and solitons in integrable, \(\mathcal{N}=2\) supersymmetric Landau-Ginzburg theories, [Lerche-Warner (1991)]</a>
+            <li> <a href=http://arxiv.org/abs/1309.3036>2d SCFTs from M2-branes, [Hori-Park-Tachikawa (2013)]</a>
+            <li> <a href=http://arxiv.org/abs/1401.2207>2d SCFT from M-branes and its spectral network, [Park (2014)]</a>
+        </ul>
+    </p>
+    </div>
     <div class="container">
     <h2>Configuration</h2>
     {% for message in get_flashed_messages() %}
