@@ -31,7 +31,7 @@
             <dd><input type=text name=n_of_v_0 value="{{ n_of_v_0 }}">
             <dt>Index of a ground state (optional)
             <dd><input type=text name=weight_index 
-                 value={{ weight_index_str }}>
+                 value="{{ weight_index_str }}">
             <dd><input type=submit class="btn btn-default" value=Submit>
         </dl>
         <input type="hidden" name="reconfig" value="True">
@@ -46,7 +46,7 @@
     <h3>Coxeter projection plot</h3>
     <a href="{{ url_for('coxeter_projection_plot', root_system = root_system,
                 n_of_v_0 = n_of_v_0, weight_index = weight_index,
-                image_format = 'pdf') }}">Save as PDF</a>
+                image_format = 'pdf') }}" download>Save as PDF</a>
     <br/>
     <img src="{{ url_for('coxeter_projection_plot', root_system = root_system,
                  n_of_v_0 = n_of_v_0, weight_index = weight_index,

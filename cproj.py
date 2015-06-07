@@ -3,7 +3,7 @@
 import os, sys, getopt
 import subprocess
 import random
-from math import ceil, log10
+from math import ceil, log10, sqrt
 from io import BytesIO
 import pdb
 
@@ -57,7 +57,8 @@ def plot_coxeter_projection(
 
     # Plot a figure of the projection of the soliton polytope.
     figure = pyplot.figure(
-        title, facecolor='w', figsize=(8, 8), 
+        title, facecolor='w',
+        figsize=(8, 8), 
         #dpi=200,
     )
     pyplot.axis('off')
@@ -143,16 +144,17 @@ def plot_coxeter_projection(
 #                        shrink=.1,
 #                    )
 #                )
-            offset = .075
+            offset = .05
             x = W_i.real
             y = W_i.imag
             dx = W_j.real - x
             dy = W_j.imag - y
+            r = sqrt(dx**2 + dy**2)
             mplobjs = pyplot.arrow(
-                x + (offset * dx), 
-                y + (offset * dy), 
-                (1 - 2*offset)*dx, 
-                (1 - 2*offset)*dy, 
+                x + (offset * dx)/r, 
+                y + (offset * dy)/r, 
+                (1 - 2*offset/r)*dx, 
+                (1 - 2*offset/r)*dy, 
                 length_includes_head=True,
                 #shape='left',
                 width=.002,
