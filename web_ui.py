@@ -168,6 +168,15 @@ def coxeter_projection_plot():
     n_of_v_0_str = flask.request.args.get('n_of_v_0')
     n_of_v_0 = int(n_of_v_0_str)
     weight_index_str = flask.request.args.get('weight_index')
+
+    image_format = flask.request.args.get('image_format', None)
+    if image_format == 'svg':
+        image_mimetype = 'image/svg+xml'
+    elif image_format == 'pdf':
+        image_mimetype = 'application/pdf'
+    else:
+        image_mimetype = 'image/png'
+
     try:
         weight_index = int(weight_index_str)
     except:
@@ -179,8 +188,9 @@ def coxeter_projection_plot():
         n_of_v_0=n_of_v_0,
         weight_index=weight_index,                   
         is_interactive=False,
+        image_format=image_format,
     )
-    rv = flask.send_file(img, mimetype='image/png', cache_timeout=0)
+    rv = flask.send_file(img, mimetype=image_mimetype, cache_timeout=0)
     rv.set_etag(str(time.time()))
     return rv
 

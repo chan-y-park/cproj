@@ -30,21 +30,20 @@ def get_sage_data_str(root_system=None, n_of_v_0_str=None,):
 
 def plot_coxeter_projection(
     sage_data_str, root_system=None, n_of_v_0=None, weight_index=None,
-    is_interactive=True,
+    is_interactive=True, image_format=None,
 ):
     #XXX: Is there a way to put these imports in the beginning of a 
     #     module?
     import matplotlib
-    if is_interactive is True:
+    if is_interactive:
         matplotlib.use('TkAgg')
     else:
         matplotlib.use('Agg')
     import mpldatacursor
     import matplotlib.pyplot as pyplot
 
-    pyplot.clf()
-
-    matplotlib.rcParams["savefig.directory"] = "./"
+    if not is_interactive:
+        pyplot.clf()
 
     # Unpack data from the sage script.
     data = eval(sage_data_str)
@@ -59,7 +58,7 @@ def plot_coxeter_projection(
     # Plot a figure of the projection of the soliton polytope.
     figure = pyplot.figure(
         title, facecolor='w', figsize=(8, 8), 
-        #dpi=100,
+        #dpi=200,
     )
     pyplot.axis('off')
 
@@ -178,12 +177,13 @@ def plot_coxeter_projection(
     pyplot.margins(.05)
 
     if is_interactive is True:
+        matplotlib.rcParams["savefig.directory"] = "./"
         # Display the plot.
         pyplot.show()
     else:
-        # Return PNG to web frontend.
+        # Return the plot to web frontend.
         img = BytesIO()
-        pyplot.savefig(img)
+        pyplot.savefig(img, format=image_format)
         img.seek(0)
         return img
 

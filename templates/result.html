@@ -44,10 +44,13 @@
     <!--<div class="container">-->
     <h2>Result</h2>
     <h3>Coxeter projection plot</h3>
-    <img src="{{ url_for('coxeter_projection_plot', 
-                 root_system = root_system,
-                 n_of_v_0 = n_of_v_0, weight_index = weight_index) }}">
-
+    <a href="{{ url_for('coxeter_projection_plot', root_system = root_system,
+                n_of_v_0 = n_of_v_0, weight_index = weight_index,
+                image_format = 'pdf') }}">Save as PDF</a>
+    <br/>
+    <img src="{{ url_for('coxeter_projection_plot', root_system = root_system,
+                 n_of_v_0 = n_of_v_0, weight_index = weight_index,
+                 image_format = 'svg') }}">
     <br/>
 
     <h3>Data</h3>
