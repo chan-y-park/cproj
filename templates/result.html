@@ -3,13 +3,46 @@
     {% for message in get_flashed_messages() %}
     <div class=flash><p>Error: {{ message }}</p></div>
     {% endfor %}
-    <div class="container">
+    <div style="width:30em; margin:20px; padding:10px; 
+                border:1px solid black;">
+    <h2>Configuration</h2>
+    <form action="{{ url_for('get_config') }}" method="post">
+        <dl>
+            <dt>Type
+            <dd>
+                <label class="radio-inline">
+                    <input type="radio" name="type" value="A"
+                    {% if type_str == "A" %} checked="checked" {% endif %}
+                    >A
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="type" value="D"
+                    {% if type_str == "D" %} checked="checked" {% endif %}
+                    >D
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="type" value="E" 
+                    {% if type_str == "E" %} checked="checked" {% endif %}
+                    >E
+                </label>
+            <dt>Rank
+            <dd><input type=text name=rank value="{{ rank_str }}">
+            <dt>Index of the fundamental weight of the representation
+            <dd><input type=text name=n_of_v_0 value="{{ n_of_v_0 }}">
+            <dt>Index of a ground state (optional)
+            <dd><input type=text name=weight_index 
+                 value={{ weight_index_str }}>
+            <dd><input type=submit class="btn btn-default" value=Submit>
+        </dl>
+        <input type="hidden" name="reconfig" value="True">
+    </form>
+    {#<a href="{{ url_for('get_config') }}" 
+     class="btn btn-default">Back to configuration</a>#}
+    </div>
+
+    <div style="margin:20px; padding:10px;"> 
+    <!--<div class="container">-->
     <h2>Result</h2>
-    <a href="{{ url_for('get_config') }}" 
-     class="btn btn-default">Back to configuration</a>
-
-    <br/>
-
     <h3>Coxeter projection plot</h3>
     <img src="{{ url_for('coxeter_projection_plot', 
                  root_system = root_system,

@@ -85,6 +85,20 @@ def get_config():
 #def show_result(key):
 @app.route('/result')
 def show_result():
+    try:
+        reconfig = eval(flask.request.form['reconfig'])
+    except KeyError:
+        reconfig = False
+    if reconfig is True:
+        return flask.redirect(
+            flask.url_for(
+                'get_config',
+                type=flask.request.form['type'],
+                rank=flask.request.form['rank'],
+                n_of_v_0=flask.request.form['n_of_v_0'],
+                weight_index=flask.request.form['weight_index'],
+            )
+        )
     root_system = flask.request.args.get('root_system')
     n_of_v_0_str = flask.request.args.get('n_of_v_0')
     n_of_v_0 = int(n_of_v_0_str)
@@ -131,6 +145,9 @@ def show_result():
     return flask.render_template(
         'result.html', 
         #key=key,
+        type_str=root_system[0],
+        rank_str=root_system[1:],
+        weight_index_str=weight_index_str,
         root_system=root_system,
         n_of_v_0=n_of_v_0,
         weight_index=weight_index,
@@ -174,6 +191,7 @@ def set_config_items(config_items, request_dict):
     config_items['root_system'] = (
         request_dict['type'] + request_dict['rank']
     )
+
 
 if __name__ == '__main__':
     app.run()
