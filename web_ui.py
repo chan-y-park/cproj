@@ -180,7 +180,8 @@ def coxeter_projection_plot():
         attachment_filename += '.svg'
     elif image_format == 'pdf':
         image_mimetype = 'application/pdf'
-        as_attachment = True
+        #as_attachment = True
+        as_attachment = False
         attachment_filename += '.pdf'
     else:
         image_mimetype = 'image/png'
