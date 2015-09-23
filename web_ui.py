@@ -54,8 +54,10 @@ def get_config():
                 return flask.redirect(flask.url_for('get_config'))
 
         if config_items['type'] == 'E':
-            if (rank != 6 and rank != 7 and rank != 8):
-                flask.flash('The rank of an E-type should be 6, 7, or 8.')
+            #if (rank != 6 and rank != 7 and rank != 8):
+                #flask.flash('The rank of an E-type should be 6, 7, or 8.')
+            if (rank != 6 and rank != 7):
+                flask.flash('The rank of an E-type should be 6 or 7.')
                 return flask.redirect(flask.url_for('get_config'))
             elif int(config_items['n_of_v_0']) != 1:
                 flask.flash(
