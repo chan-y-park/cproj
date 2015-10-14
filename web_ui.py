@@ -15,7 +15,6 @@ app.config.from_object(__name__)
 
 @app.route('/')
 def show_welcome():
-    app.test()
     return flask.redirect(flask.url_for('get_config'))
 
 @app.route('/config', methods=['GET', 'POST'])
