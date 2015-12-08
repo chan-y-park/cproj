@@ -1,3 +1,5 @@
+# Force integer division to give a float, i.e. 1/2 = 0.5.
+from __future__ import division
 import flask
 import multiprocessing 
 import time
