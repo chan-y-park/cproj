@@ -1,5 +1,3 @@
-# Force integer division to give a float, i.e. 1/2 = 0.5.
-from __future__ import division
 import flask
 import multiprocessing 
 import time
@@ -114,13 +112,13 @@ def show_result():
     
     sage_data_str = cproj.get_sage_data_str(root_system, n_of_v_0_str)
     data = eval(sage_data_str)
-    weyl_orbit = data["weyl_orbit"]
+    weyl_orbit_strs = data["weyl_orbit_strs"]
     W_critical = data["W_critical"]
-    roots = data["roots"]
+    root_strs = data["root_strs"]
     simple_soliton_table = data["simple_soliton_table"]
     v_c = data["coxeter_vector"]
 
-    len_orbit = len(weyl_orbit)
+    len_orbit = len(weyl_orbit_strs)
     # Prepare v_c data
     v_c_str = '(' + ', '.join(
         '{:.3f}{:+.3f}i'.format(v_c_i.real, v_c_i.imag) for v_c_i in v_c
@@ -155,9 +153,9 @@ def show_result():
         root_system=root_system,
         n_of_v_0=n_of_v_0,
         weight_index=weight_index,
-        weyl_orbit=weyl_orbit,
+        weyl_orbit_strs=weyl_orbit_strs,
         W_c_str=W_c_str,
-        roots=roots,
+        root_strs=root_strs,
         solitons_str=solitons_str,
         v_c_str=v_c_str,
         len_orbit=len_orbit,
@@ -221,4 +219,4 @@ def set_config_items(config_items, request_dict):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=9999, debug=True,)

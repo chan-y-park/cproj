@@ -63,7 +63,7 @@
     <h4>Weights of ground states 
         (in the orthonomal basis of the weight space)</h4>
     <ul>
-    {% for v_i in weyl_orbit %}
+    {% for v_i in weyl_orbit_strs %}
         <li> \(v_{ {{ loop.index }} } = {{ v_i }}\)
     {% endfor %}
     </ul>
@@ -77,7 +77,7 @@
 
     <h4>Roots (in the orthonomal basis of the weight space)</h4>
     <ul>
-    {% for alpha_i in roots %}
+    {% for alpha_i in root_strs %}
         <li> \(\alpha_{ {{ loop.index }} } = {{ alpha_i }}\)
     {% endfor %}
     </ul>

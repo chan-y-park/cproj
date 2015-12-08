@@ -83,9 +83,9 @@ for i in range(len_orbit):
                 simple_soliton_table[i][j] = (k, n)
             
 data = {
-    "weyl_orbit": weyl_orbit,
+    "weyl_orbit_strs": [str(v) for v in weyl_orbit],
     "W_critical": W_critical,
-    "roots": A.roots(),
+    "root_strs": [str(r) for r in A.roots()],
     "simple_soliton_table": simple_soliton_table,
     "coxeter_vector": tuple([complex(v_c_i) for v_c_i in v_c]),
 }

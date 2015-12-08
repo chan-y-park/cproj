@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-
+# Force integer division to give a float, i.e. 1/2 = 0.5.
+from __future__ import division
 import os, sys, getopt
 import subprocess
 import random
@@ -47,11 +48,14 @@ def plot_coxeter_projection(
 
     # Unpack data from the sage script.
     data = eval(sage_data_str)
-    weyl_orbit = data["weyl_orbit"]
+    weyl_orbit_strs = data["weyl_orbit_strs"]
     W_critical = data["W_critical"]
-    roots = data["roots"]
+    root_strs = data["root_strs"]
     simple_soliton_table = data["simple_soliton_table"]
     v_c = data["coxeter_vector"]
+
+    weyl_orbit = [eval(v_str) for v_str in weyl_orbit_strs]
+    roots = [eval(r_str) for r_str in root_strs]
 
     title = root_system + "_" + str(n_of_v_0)
 
