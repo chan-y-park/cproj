@@ -59,10 +59,13 @@ def plot_coxeter_projection(
 
     title = root_system + "_" + str(n_of_v_0)
 
+    max_n_digits = ceil(log10(len(weyl_orbit)))
+
     # Plot a figure of the projection of the soliton polytope.
+    figure_size = 6 * max_n_digits
     figure = pyplot.figure(
         title, facecolor='w',
-        figsize=(8, 8), 
+        figsize=(figure_size, figure_size), 
         #dpi=200,
     )
     pyplot.axis('off')
@@ -73,7 +76,7 @@ def plot_coxeter_projection(
 
     # Plot critical points.
     W_marker_size = 25
-    W_font_size = 18.0/ceil(log10(len(weyl_orbit)))
+    W_font_size = 18.0 / max_n_digits
     W_point_labels = ["$v_{{{}}} = {}$".format(i, v_i) 
                       for i, v_i in enumerate(weyl_orbit)]
 
@@ -90,7 +93,7 @@ def plot_coxeter_projection(
         )
         pyplot.text(
             W.real, W.imag,
-            ','.join(str(i+1) for i in indices),
+            ','.join(str(i + 1) for i in indices),
             fontsize=W_font_size/len(indices),
             verticalalignment='center',
             horizontalalignment='center',
@@ -138,17 +141,18 @@ def plot_coxeter_projection(
                 sign_str, soliton, root
             )
             # Draw an arrow from v_i to v_j
-#                mplobjs = pyplot.annotate(
-#                    '',
-#                    xy=(W_j.real, W_j.imag),
-#                    xytext=(W_i.real, W_i.imag),
-#                    arrowprops=dict(
-#                        edgecolor=None,
-#                        facecolor=soliton_colors[soliton], 
-#                        shrink=.1,
-#                    )
+#            mplobjs = pyplot.annotate(
+#                '',
+#                xy=(W_j.real, W_j.imag),
+#                xytext=(W_i.real, W_i.imag),
+#                arrowprops=dict(
+#                    edgecolor=None,
+#                    facecolor=soliton_colors[soliton], 
+#                    shrink=.1,
 #                )
-            offset = .05
+#            )
+
+            offset = .05 / max_n_digits
             x = W_i.real
             y = W_i.imag
             dx = W_j.real - x
@@ -161,16 +165,17 @@ def plot_coxeter_projection(
                 (1 - 2*offset/r)*dy, 
                 length_includes_head=True,
                 #shape='left',
-                width=.002,
-                head_width=.03,
-                head_length=.045,
+                #width=.002,
+                #head_width=.03,
+                #head_length=.045,
                 label=label, color=soliton_colors[soliton],
             )
-            # Draw a line from v_i to v_j
-            #mplobjs = pyplot.plot(
-            #    [W_i.real, W_j.real], [W_i.imag, W_j.imag], '-',
-            #    label=label, color=soliton_colors[soliton],
-            #)[0]
+
+#            # Draw a line from v_i to v_j
+#            mplobjs = pyplot.plot(
+#                [W_i.real, W_j.real], [W_i.imag, W_j.imag], '-',
+#                label=label, color=soliton_colors[soliton],
+#            )[0]
             mpldatacursor_artists.append(mplobjs)
 
     mpldatacursor.datacursor(
