@@ -56,14 +56,20 @@ def get_config():
         if config_items['type'] == 'E':
             #if (rank != 6 and rank != 7 and rank != 8):
                 #flask.flash('The rank of an E-type should be 6, 7, or 8.')
-            if (rank != 6 and rank != 7):
-                flask.flash('The rank of an E-type should be 6 or 7.')
-                return flask.redirect(flask.url_for('get_config'))
-            elif int(config_items['n_of_v_0']) != 1:
-                flask.flash(
-                    'Only 1 is allowed for the index of the fundamental '
-                    'weight for {}.'.format(config_items['root_system'])
-                )
+#            if (rank != 6 and rank != 7):
+#                flask.flash('The rank of an E-type should be 6 or 7.')
+#                return flask.redirect(flask.url_for('get_config'))
+#            elif int(config_items['n_of_v_0']) != 1:
+#                flask.flash(
+#                    'Only 1 is allowed for the index of the fundamental '
+#                    'weight for {}.'.format(config_items['root_system'])
+#                )
+#                return flask.redirect(flask.url_for('get_config'))
+            if not (
+                (rank == 6 and (n_of_v_0 == 1 or n_of_v_0 == 6)) or
+                (rank == 7 and n_of_v_0 == 7)
+            ):
+                flask.flash('Incorrect data for E-type.')
                 return flask.redirect(flask.url_for('get_config'))
 
         cproj.set_sage_data(
