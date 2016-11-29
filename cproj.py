@@ -11,6 +11,7 @@ import pdb
 DATA_DIR = './data/'
 PLOT_DIR = './static/'
 
+
 def set_sage_data(root_system=None, n_of_v_0_str=None,):
     data_file_path = DATA_DIR + root_system + '_' + n_of_v_0_str
     if not os.path.exists(DATA_DIR):
@@ -21,6 +22,7 @@ def set_sage_data(root_system=None, n_of_v_0_str=None,):
         )
         with open(data_file_path, 'w') as f:
             f.write(sage_data_str)
+
 
 def get_sage_data_str(root_system=None, n_of_v_0_str=None,):
     data_file_path = DATA_DIR + root_system + '_' + n_of_v_0_str
@@ -33,8 +35,6 @@ def plot_coxeter_projection(
     sage_data_str, root_system=None, n_of_v_0=None, weight_index=None,
     is_interactive=True, image_format=None,
 ):
-    #XXX: Is there a way to put these imports in the beginning of a 
-    #     module?
     import matplotlib
     if is_interactive:
         matplotlib.use('TkAgg')
@@ -66,7 +66,6 @@ def plot_coxeter_projection(
     figure = pyplot.figure(
         title, facecolor='w',
         figsize=(figure_size, figure_size), 
-        #dpi=200,
     )
     pyplot.axis('off')
 
@@ -110,9 +109,6 @@ def plot_coxeter_projection(
     soliton_colors = [soliton_colormap.to_rgba(i)
                       for i in range(len(roots))]
     random.shuffle(soliton_colors)
-    #colors = ['b', 'r', 'g', 'c', 'm', 'y']
-    #soliton_colors = [colors[i%6] for i in range(len(roots))]
-
 
     if (weight_index is None 
         or weight_index > len(weyl_orbit) 
@@ -124,8 +120,6 @@ def plot_coxeter_projection(
     for i in i_list:
         W_i = W_critical[i]
         for j in range(len(weyl_orbit)):
-            #if j <= i:
-            #    continue
             soliton_data = simple_soliton_table[i][j]
             if soliton_data is None:
                 continue
@@ -140,17 +134,6 @@ def plot_coxeter_projection(
             label = "${}\\alpha_{{{}}} = {}$".format(
                 sign_str, soliton, root
             )
-            # Draw an arrow from v_i to v_j
-#            mplobjs = pyplot.annotate(
-#                '',
-#                xy=(W_j.real, W_j.imag),
-#                xytext=(W_i.real, W_i.imag),
-#                arrowprops=dict(
-#                    edgecolor=None,
-#                    facecolor=soliton_colors[soliton], 
-#                    shrink=.1,
-#                )
-#            )
 
             offset = .05 / max_n_digits
             x = W_i.real
@@ -164,18 +147,9 @@ def plot_coxeter_projection(
                 (1 - 2*offset/r)*dx, 
                 (1 - 2*offset/r)*dy, 
                 length_includes_head=True,
-                #shape='left',
-                #width=.002,
-                #head_width=.03,
-                #head_length=.045,
                 label=label, color=soliton_colors[soliton],
             )
 
-#            # Draw a line from v_i to v_j
-#            mplobjs = pyplot.plot(
-#                [W_i.real, W_j.real], [W_i.imag, W_j.imag], '-',
-#                label=label, color=soliton_colors[soliton],
-#            )[0]
             mpldatacursor_artists.append(mplobjs)
 
     mpldatacursor.datacursor(
@@ -198,17 +172,6 @@ def plot_coxeter_projection(
         img.seek(0)
         return img
 
-#        if not os.path.exists(PLOT_DIR):
-#            os.makedirs(PLOT_DIR)
-#
-#        plot_file_name = root_system + '_' + str(n_of_v_0)
-#        if weight_index is not None:
-#            plot_file_name += '_' + str(weight_index)
-#        plot_file_name += '.png'
-#        plot_file_path = PLOT_DIR + plot_file_name
-#        if not os.path.isfile(plot_file_path):
-#            pyplot.savefig(plot_file_path)
-#        return plot_file_path
 
 def group_degenerate_W_c(W_c):
     # grouped_W_c = [[W_i, [i_1, i_2, ...]], [W_j, [j_1, j_2, ...]], ...]
@@ -226,14 +189,9 @@ def group_degenerate_W_c(W_c):
             grouped_W_c.append([W_i, [i]])
 
     return grouped_W_c
-            
 
 
 if __name__ == '__main__':
-    #root_system = input("Enter the root system (e.g. 'A3', 'D4'): ")
-
-    #n_of_v_0 = input("Enter the index of the fundamental weight "
-    #                 "(n of \\omega_n): ")
     root_system = sys.argv[1]
     n_of_v_0 = sys.argv[2]
 

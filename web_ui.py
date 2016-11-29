@@ -5,17 +5,19 @@ from io import BytesIO
 import pdb
 import cproj
 
-# configuration
+# Flask configuration.
 DEBUG = True
 SECRET_KEY = 'coxeter projection key'
-#CACHE_TYPE = 'null'
+# CACHE_TYPE = 'null'
 
 app = flask.Flask(__name__)
 app.config.from_object(__name__)
 
+
 @app.route('/')
 def show_welcome():
     return flask.redirect(flask.url_for('get_config'))
+
 
 @app.route('/config', methods=['GET', 'POST'])
 def get_config():
@@ -26,7 +28,7 @@ def get_config():
         set_config_items(config_items, flask.request.form)
 
     if bool(config_items):
-        # Form validity checks
+        # Form validity checks.
         try:
             rank = int(config_items['rank'])
         except ValueError:
@@ -54,17 +56,6 @@ def get_config():
                 return flask.redirect(flask.url_for('get_config'))
 
         if config_items['type'] == 'E':
-            #if (rank != 6 and rank != 7 and rank != 8):
-                #flask.flash('The rank of an E-type should be 6, 7, or 8.')
-#            if (rank != 6 and rank != 7):
-#                flask.flash('The rank of an E-type should be 6 or 7.')
-#                return flask.redirect(flask.url_for('get_config'))
-#            elif int(config_items['n_of_v_0']) != 1:
-#                flask.flash(
-#                    'Only 1 is allowed for the index of the fundamental '
-#                    'weight for {}.'.format(config_items['root_system'])
-#                )
-#                return flask.redirect(flask.url_for('get_config'))
             if not (
                 (rank == 6 and (n_of_v_0 == 1 or n_of_v_0 == 6)) or
                 (rank == 7 and n_of_v_0 == 7)
@@ -79,7 +70,6 @@ def get_config():
         return flask.redirect(
             flask.url_for(
                 'show_result',
-                #key=time.time(),
                 root_system=config_items['root_system'],
                 n_of_v_0=config_items['n_of_v_0'],
                 weight_index=config_items['weight_index'],
@@ -89,8 +79,6 @@ def get_config():
     return flask.render_template('config.html')
 
 
-#@app.route('/result/<key>')
-#def show_result(key):
 @app.route('/result')
 def show_result():
     try:
@@ -152,7 +140,6 @@ def show_result():
 
     return flask.render_template(
         'result.html', 
-        #key=key,
         type_str=root_system[0],
         rank_str=root_system[1:],
         weight_index_str=weight_index_str,
@@ -168,8 +155,6 @@ def show_result():
     )
 
 
-#@app.route('/plot/<key>')
-#def coxeter_projection_plot(key):
 @app.route('/plot')
 def coxeter_projection_plot():
     root_system = flask.request.args.get('root_system')
@@ -188,7 +173,6 @@ def coxeter_projection_plot():
         attachment_filename += '.svg'
     elif image_format == 'pdf':
         image_mimetype = 'application/pdf'
-        #as_attachment = True
         as_attachment = False
         attachment_filename += '.pdf'
     else:
