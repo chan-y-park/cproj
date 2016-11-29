@@ -2,12 +2,14 @@
 {% block body %}
     <div style="width:800px; margin:20px 20px 20px 20px">
     <p>This web page dynamically generates the Coxeter projection of a representation of a simply-laced Lie algebra, which is a projection from a higher dimensional weight space onto a complex plane.</p>
-    <p>Here we consider a representation of \(\mathfrak{g} = A_n, D_n, E_6\), or \(E_7\) whose highest weight \(v_0\) is a fundamental weight \(\omega_i\), and display the projections of the weights in the representation and the roots connecting the weights. 
+    <p>The source code of this web application can be found at <a href=http://github.com/chan-y-park/cproj>this GitHub page.</a></p>
+    <p>Here we consider a representation of \(\mathfrak{g} = \mathrm{A}_n, \mathrm{D}_n, \mathrm{E}_6\), or \(\mathrm{E}_7\) whose highest weight \(v_0\) is a fundamental weight \(\omega_i\), and display the projections of the weights in the representation and the roots connecting the weights. 
     <p>Physically, a Coxeter projection encodes the BPS spectrum of a 2d \(\mathcal{N} = (2,2)\) Landau-Ginzburg model. For more detail, see
         <ul>
             <li> <a href=https://inspirehep.net/record/29267?ln=en>Polytopes and solitons in integrable, \(\mathcal{N}=2\) supersymmetric Landau-Ginzburg theories, [Lerche-Warner (1991)]</a>
             <li> <a href=http://arxiv.org/abs/1309.3036>2d SCFTs from M2-branes, [Hori-Park-Tachikawa (2013)]</a>
             <li> <a href=http://arxiv.org/abs/1401.2207>2d SCFT from M-branes and its spectral network, [Park (2014)]</a>
+            <li> <a href=http://arxiv.org/abs/1611.xxxxx>ADE spectral networks and decoupling limits of surface defects, [Longhi-Park (2014)]</a>
         </ul>
     </p>
     </div>
@@ -44,18 +46,54 @@
     <div style="margin:20px 20px 20px 20px">
     <h2>Examples</h2>
     <ul>
-        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=A&rank=2&n_of_v_0=1&weight_index=">\(\mathfrak{g} = A_2, v_0 = \omega_1\)</a> (Solitons of \(G/H = \mathrm{SU}(3)/[\mathrm{SU}(2) \times \mathrm{U}(1) ]\))
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=A&rank=2&n_of_v_0=1&weight_index=">\(\mathfrak{g} = \mathrm{A}_2, v_0 = \omega_1\)</a> (Solitons of \(G/H = \mathrm{SU}(3)/[\mathrm{SU}(2) \times \mathrm{U}(1) ]\))
         <br/><img src="static/A2_1.svg" height=200 width=200>
-        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=A&rank=3&n_of_v_0=1&weight_index=">\(\mathfrak{g} = A_3, v_0 = \omega_1\)</a> (Solitons of \(G/H = \mathrm{SU}(4)/[\mathrm{SU}(3) \times \mathrm{U}(1) ]\)) 
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=A&rank=3&n_of_v_0=1&weight_index=">\(\mathfrak{g} = \mathrm{A}_3, v_0 = \omega_1\)</a> (Solitons of \(G/H = \mathrm{SU}(4)/[\mathrm{SU}(3) \times \mathrm{U}(1) ]\)) 
         <br/><img src="static/A3_1.svg" height=300 width=300>
-        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=A&rank=3&n_of_v_0=2&weight_index=">\(\mathfrak{g} = A_3, v_0 = \omega_2\)</a> (Solitons of \(G/H = \mathrm{SU}(4)/[\mathrm{SU}(2) \times \mathrm{SU}(2) \times \mathrm{U}(1) ]\)) 
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=A&rank=3&n_of_v_0=2&weight_index=">\(\mathfrak{g} = \mathrm{A}_3, v_0 = \omega_2\)</a> (Solitons of \(G/H = \mathrm{SU}(4)/[\mathrm{SU}(2) \times \mathrm{SU}(2) \times \mathrm{U}(1) ]\)) 
         <br/><img src="static/A3_2.svg" height=300 width=300>
-        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=D&rank=4&n_of_v_0=1&weight_index=">\(\mathfrak{g} = D_4, v_0 = \omega_1\)</a> (Solitons of \(G/H = \mathrm{SO}(8)/[\mathrm{SO}(6) \times \mathrm{SO}(2)]\)) 
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=A&rank=5&n_of_v_0=1&weight_index=">\(\mathfrak{g} = \mathrm{A}_5, v_0 = \omega_1\)</a> (Solitons of \(G/H = \mathrm{SU}(6)/[\mathrm{SU}(5) \times \mathrm{U}(1) ]\)) 
+        <br/><img src="static/A5_1.svg" height=300 width=300>
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=A&rank=5&n_of_v_0=2&weight_index=">\(\mathfrak{g} = \mathrm{A}_5, v_0 = \omega_2\)</a> (Solitons of \(G/H = \mathrm{SU}(6)/[\mathrm{SU}(4) \times \mathrm{SU}(2) \times \mathrm{U}(1) ]\)) 
+        <br/><img src="static/A5_2.svg" height=300 width=300>
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=A&rank=5&n_of_v_0=2&weight_index=1">\(\mathfrak{g} = \mathrm{A}_5, v_0 = \omega_2\), roots from \(v_1\)</a> (Solitons of \(G/H = \mathrm{SU}(6)/[\mathrm{SU}(4) \times \mathrm{SU}(2) \times \mathrm{U}(1) ]\)) from a single ground state \(v_1\) 
+        <br/><img src="static/A5_2_1.svg" height=300 width=300>
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=A&rank=5&n_of_v_0=3&weight_index=">\(\mathfrak{g} = \mathrm{A}_5, v_0 = \omega_3\)</a> (Solitons of \(G/H = \mathrm{SU}(6)/[\mathrm{SU}(3) \times \mathrm{SU}(3) \times \mathrm{U}(1) ]\)) 
+        <br/><img src="static/A5_3.svg" height=300 width=300>
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=D&rank=3&n_of_v_0=1&weight_index=">\(\mathfrak{g} = \mathrm{D}_3, v_0 = \omega_1\)</a> (Solitons of \(G/H = \mathrm{SO}(6)/[\mathrm{SO}(4) \times \mathrm{U}(1)]\)) 
+        <br/><img src="static/D3_1.svg" height=300 width=300>
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=D&rank=4&n_of_v_0=1&weight_index=">\(\mathfrak{g} = \mathrm{D}_4, v_0 = \omega_1\)</a> (Solitons of \(G/H = \mathrm{SO}(8)/[\mathrm{SO}(6) \times \mathrm{U}(1)]\)) 
         <br/><img src="static/D4_1.svg" height=300 width=300>
-        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=E&rank=6&n_of_v_0=1&weight_index=">\(\mathfrak{g} = E_6, v_0 = \omega_1\)</a> (Solitons of \(G/H = {\mathrm{E}_6}/[\mathrm{SO}(10) \times \mathrm{U}(1)]\)) 
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=D&rank=5&n_of_v_0=5&weight_index=">\(\mathfrak{g} = \mathrm{D}_5, v_0 = \omega_5\)</a> (Solitons of \(G/H = \mathrm{SO}(10)/[\mathrm{SU}(5) \times \mathrm{U}(1)]\)) 
+        <br/><img src="static/D5_5.svg" height=300 width=300>
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=D&rank=6&n_of_v_0=6&weight_index=">\(\mathfrak{g} = \mathrm{D}_6, v_0 = \omega_6\)</a> (Solitons of \(G/H = \mathrm{SO}(12)/[\mathrm{SU}(6) \times \mathrm{U}(1)]\)) 
+        <br/><img src="static/D6_6.svg" height=300 width=300>
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=E&rank=6&n_of_v_0=1&weight_index=">\(\mathfrak{g} = \mathrm{E}_6, v_0 = \omega_1\)</a> (Solitons of \(G/H = {\mathrm{E}_6}/[\mathrm{SO}(10) \times \mathrm{U}(1)]\)) 
         <br/><img src="static/E6_1.svg" height=400 width=400>
-        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=E&rank=6&n_of_v_0=1&weight_index=1">\(\mathfrak{g} = E_6, v_0 = \omega_1\), roots from \(v_1\)</a> (Solitons of \(G/H = {\mathrm{E}_6}/[\mathrm{SO}(10) \times \mathrm{U}(1)]\) from a single ground state \(v_1\))
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=E&rank=6&n_of_v_0=1&weight_index=1">\(\mathfrak{g} = \mathrm{E}_6, v_0 = \omega_1\), roots from \(v_1\)</a> (Solitons of \(G/H = {\mathrm{E}_6}/[\mathrm{SO}(10) \times \mathrm{U}(1)]\) from a single ground state \(v_1\))
         <br/><img src="static/E6_1_1.svg" height=400 width=400>
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=E&rank=6&n_of_v_0=1&weight_index=9">\(\mathfrak{g} = \mathrm{E}_6, v_0 = \omega_1\), roots from \(v_9\)</a> (Solitons of \(G/H = {\mathrm{E}_6}/[\mathrm{SO}(10) \times \mathrm{U}(1)]\) from a single ground state \(v_9\))
+        <br/><img src="static/E6_1_9.svg" height=400 width=400>
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=E&rank=7&n_of_v_0=7&weight_index=">\(\mathfrak{g} = \mathrm{E}_7, v_0 = \omega_7\)</a> (Solitons of \(G/H = {\mathrm{E}_7}/[\mathrm{E}_6 \times \mathrm{U}(1)]\)) 
+        <br/><img src="static/E7_7.svg" height=400 width=400>
+
+        <li><a href="http://chan.physics.rutgers.edu/cproj/config?type=E&rank=7&n_of_v_0=7&weight_index=24">\(\mathfrak{g} = \mathrm{E}_7, v_0 = \omega_1\), roots from \(v_{24}\)</a> (Solitons of \(G/H = {\mathrm{E}_7}/[\mathrm{E}_6 \times \mathrm{U}(1)]\) from a single ground state \(v_{24}\))
+        <br/><img src="static/E7_7_24.svg" height=400 width=400>
+
     </ul>
     </div>
 {% endblock %}
